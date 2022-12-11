@@ -23,6 +23,21 @@ build-image:
 	--build-arg ROOTFS_IMAGE=$(ROOTFS_VERSION) \
 	-t mendix/mendix-buildpack:$(VERSION) .
 
+build-base-image-for-private-net:
+	docker build \
+	-f Dockerfile.private.base \
+	--build-arg BUILD_PATH=build \
+	--build-arg CF_BUILDPACK=$(CF_BUILDPACK_VERSION) \
+	--build-arg ROOTFS_IMAGE=$(ROOTFS_VERSION) \
+	-t mendix/mendix-buildpack-private-net-base:$(VERSION) .
+
+build-image-on-private-net:
+	docker build \
+	-f Dockerfile.private \
+	--build-arg BUILD_PATH=build \
+	--build-arg ROOTFS_IMAGE=$(ROOTFS_VERSION) \
+	-t mendix/mendix-buildpack-private-net:$(VERSION) .
+
 test-container:
 	tests/test-generic.sh tests/docker-compose-postgres.yml
 	tests/test-generic.sh tests/docker-compose-sqlserver.yml
